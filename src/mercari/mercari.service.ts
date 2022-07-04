@@ -7,7 +7,6 @@ import { PartEntity } from '../part/part.entity';
 
 @Injectable()
 export class MercariService {
-  constructor() {}
   private browser: Browser;
 
   private async init(params?: string): Promise<Page> {
@@ -25,7 +24,7 @@ export class MercariService {
   }
 
   /**
-   * 一時間ごとに実行
+   * 引数で受け取ったパーツをメルカリで調べる
    * @param part
    * @param soldOut
    **/

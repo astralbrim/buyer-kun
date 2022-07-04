@@ -11,6 +11,7 @@ import { DiscordModule as baseDM } from '@discord-nestjs/core';
 import { Intents } from 'discord.js';
 import { DiscordModule } from './discord/discord.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
         },
       }),
     }),
+    LoggerModule,
   ],
   controllers: [],
   providers: [],

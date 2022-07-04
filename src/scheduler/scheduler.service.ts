@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DiscordService } from '../discord/discord.service';
 import { MercariService } from '../mercari/mercari.service';
@@ -12,6 +12,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 @Injectable()
 export class SchedulerService {
   private time: number;
+  private readonly loggerService = new Logger()
 
   constructor(
     private readonly discordService: DiscordService,
@@ -59,6 +60,7 @@ export class SchedulerService {
    */
   @Cron(CronExpression.EVERY_30_MINUTES)
   async getGoodProduct() {
+    this.loggerService.log("GET GOOD PRODUCT")
     const newParts = await this.partService.getAll();
     for (const part of newParts) {
       // 販売中の商品の取得

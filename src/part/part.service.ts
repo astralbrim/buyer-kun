@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PartEntity } from './part.entity';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { ProductType } from '../product/product.constant';
 
 @Injectable()
 export class PartService {
@@ -16,7 +17,12 @@ export class PartService {
     return await this.partRepository.findOneBy({ name });
   }
 
-  async add(name, minPrice, maxPrice, type): Promise<PartEntity> {
+  async add(
+    name: string,
+    minPrice: number,
+    maxPrice: number,
+    type: ProductType,
+  ): Promise<PartEntity> {
     const part = PartEntity.create(name, minPrice, maxPrice, type);
     const result = await this.partRepository.save(part);
     this.eventEmitter.emit('part.add');
@@ -27,9 +33,28 @@ export class PartService {
     return await this.partRepository.find();
   }
 
-  async updateMarketPrice(name: string, marketPrice: number) {
+  async updateMarketPrice(
+    name: string,
+    marketPrice: number,
+  ): Promise<PartEntity> {
     const part = await this.getByName(name);
     part.marketPrice = marketPrice;
-    await this.partRepository.save(part);
+    return await this.partRepository.save(part);
+  }
+
+  async updateSetting(
+    name: string,
+    minPrice: number,
+    maxPrice: number,
+  ): Promise<PartEntity> {
+    const part = await this.getByName(name);
+    part.name = name;
+    part.minPrice = minPrice;
+    part.maxPrice = maxPrice;
+    return await this.partRepository.save(part);
+  }
+
+  async delete(partName: string): Promise<boolean> {
+    return !!(await this.partRepository.delete({ name: partName }));
   }
 }

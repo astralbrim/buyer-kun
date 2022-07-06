@@ -9,16 +9,20 @@ import { PartEntity } from '../part/part.entity';
 import { SchedulerModule } from '../scheduler/scheduler.module';
 import { PartController } from './part/part.controller';
 import { ProductController } from './product/product.controller';
+import { SettingController } from './setting/setting.controller';
+import { SettingEntity } from '../setting/setting.entity';
+import { SettingModule } from '../setting/setting.module';
 
 @Module({
   imports: [
     ProductModule,
-    TypeOrmModule.forFeature([ProductEntity, PartEntity]),
+    TypeOrmModule.forFeature([ProductEntity, PartEntity, SettingEntity]),
     MercariModule,
     PartModule,
     SchedulerModule,
-    ],
+    SettingModule,
+  ],
   providers: [ProductService],
-  controllers: [PartController, ProductController],
+  controllers: [PartController, ProductController, SettingController],
 })
 export class ApiModule {}

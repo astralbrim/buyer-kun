@@ -7,10 +7,12 @@ import { MercariModule } from '../mercari/mercari.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PartEntity } from '../part/part.entity';
 import { ProductModule } from '../product/product.module';
+import { SchedulerManager } from './scheduler.manager';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   exports: [SchedulerService],
-  providers: [SchedulerService],
+  providers: [SchedulerService, SchedulerManager],
   imports: [
     DiscordModule,
     DM.forFeature(),
@@ -18,6 +20,7 @@ import { ProductModule } from '../product/product.module';
     PartModule,
     ProductModule,
     TypeOrmModule.forFeature([PartEntity]),
+    ScheduleModule,
   ],
 })
 export class SchedulerModule {}

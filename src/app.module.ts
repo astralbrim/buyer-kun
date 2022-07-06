@@ -11,8 +11,9 @@ import { DiscordModule as baseDM } from '@discord-nestjs/core';
 import { DiscordModule } from './discord/discord.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { LoggerModule } from './logger/logger.module';
-import {ConfigModule} from "@nestjs/config";
-import {DiscordConfigService} from "./config/discord-config.service";
+import { ConfigModule } from '@nestjs/config';
+import { DiscordConfigService } from './config/discord-config.service';
+import { SettingModule } from './setting/setting.module';
 
 @Module({
   imports: [
@@ -27,12 +28,13 @@ import {DiscordConfigService} from "./config/discord-config.service";
     PartModule,
     DiscordModule,
     EventEmitterModule.forRoot(),
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     baseDM.forRootAsync({
       imports: [ConfigModule],
       useClass: DiscordConfigService,
     }),
     LoggerModule,
+    SettingModule,
   ],
   controllers: [],
   providers: [],

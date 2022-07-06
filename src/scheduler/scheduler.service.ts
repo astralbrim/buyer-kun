@@ -1,18 +1,18 @@
-import {Injectable, Logger} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DiscordService } from '../discord/discord.service';
 import { MercariService } from '../mercari/mercari.service';
 import { PartService } from '../part/part.service';
 import { Utils as MUtils } from '../mercari/utils';
 import { ProductService } from '../product/product.service';
-import { PRICE_RATIO } from './scheduler.constant';
+import { CRON_JOB, PRICE_RATIO } from './scheduler.constant';
 import { Channel } from '../discord/discord.constant';
 import { OnEvent } from '@nestjs/event-emitter';
 
 @Injectable()
 export class SchedulerService {
   private time: number;
-  private readonly loggerService = new Logger()
+  private readonly loggerService = new Logger();
 
   constructor(
     private readonly discordService: DiscordService,
@@ -26,9 +26,10 @@ export class SchedulerService {
   /**
    * 相場の取得
    */
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_HOUR, { name: CRON_JOB.GET_MARKET_PRICE })
   @OnEvent('part.add', { async: false })
   async getMarketPlace() {
+    this.loggerService.log('相場の調査を開始');
     // 全てのパーツ
     const parts = await this.partService.getAll();
     for (const part of parts) {
@@ -58,9 +59,9 @@ export class SchedulerService {
   /**
    * いい商品を取得し報告する
    */
-  @Cron(CronExpression.EVERY_30_MINUTES)
-  async getGoodProduct() {
-    this.loggerService.log("GET GOOD PRODUCT")
+  @Cron(CronExpression.EVERY_30_MINUTES, { name: CRON_JOB.POST_GOOD_PRODUCT })
+  async postGoodProduct() {
+    this.loggerService.log('いい商品を見つけてきます');
     const newParts = await this.partService.getAll();
     for (const part of newParts) {
       // 販売中の商品の取得
@@ -94,8 +95,9 @@ export class SchedulerService {
   /**
    * 相場をディスコードに報告
    */
-  @Cron(CronExpression.EVERY_3_HOURS)
+  @Cron(CronExpression.EVERY_3_HOURS, { name: CRON_JOB.POST_MARKET_PRICE })
   async postMarketPrice() {
+    this.loggerService.log('相場をディスコードに報告します。');
     const parts = await this.partService.getAll();
     parts.forEach((part) => {
       this.discordService.sendMessage(

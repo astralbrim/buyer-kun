@@ -1,6 +1,9 @@
-import {Injectable} from "@nestjs/common";
-import {DiscordModuleOption, DiscordOptionsFactory} from "@discord-nestjs/core";
-import {ConfigService} from "@nestjs/config";
+import { Injectable } from '@nestjs/common';
+import {
+  DiscordModuleOption,
+  DiscordOptionsFactory,
+} from '@discord-nestjs/core';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class DiscordConfigService implements DiscordOptionsFactory {
@@ -9,8 +12,8 @@ export class DiscordConfigService implements DiscordOptionsFactory {
     return {
       token: configService.get<string>('DISCORD_TOKEN'),
       discordClientOptions: {
-        intents: ["GUILD_MESSAGES"]
+        intents: ['GUILD_MESSAGES'],
       },
-    }
+    };
   }
 }

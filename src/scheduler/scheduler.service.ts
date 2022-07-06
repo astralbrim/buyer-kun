@@ -5,9 +5,10 @@ import { MercariService } from '../mercari/mercari.service';
 import { PartService } from '../part/part.service';
 import { Utils as MUtils } from '../mercari/utils';
 import { ProductService } from '../product/product.service';
-import { CRON_JOB, PRICE_RATIO } from './scheduler.constant';
+import { CRON_JOB } from './scheduler.constant';
 import { Channel } from '../discord/discord.constant';
 import { OnEvent } from '@nestjs/event-emitter';
+import {SettingService} from "../setting/setting.service";
 
 @Injectable()
 export class SchedulerService {
@@ -19,6 +20,7 @@ export class SchedulerService {
     private readonly mercariService: MercariService,
     private readonly partService: PartService,
     private readonly productService: ProductService,
+    private readonly settingService: SettingService,
   ) {
     this.time = 0;
   }
@@ -62,6 +64,7 @@ export class SchedulerService {
   @Cron(CronExpression.EVERY_30_MINUTES, { name: CRON_JOB.POST_GOOD_PRODUCT })
   async postGoodProduct() {
     this.loggerService.log('いい商品を見つけてきます');
+    const {priceRatio} = await this.settingService.getSetting();
     const newParts = await this.partService.getAll();
     for (const part of newParts) {
       // 販売中の商品の取得
@@ -81,7 +84,7 @@ export class SchedulerService {
       await this.productService.addProducts(filteredArray);
       for (const product of filteredArray) {
         if (product.alreadyNotified) return;
-        if (product.price < part.marketPrice * PRICE_RATIO) {
+        if (product.price < part.marketPrice * priceRatio) {
           await this.discordService.sendProductMessage(
             product,
             Channel.PRODUCT,

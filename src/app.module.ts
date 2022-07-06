@@ -30,7 +30,7 @@ import { SettingModule } from './setting/setting.module';
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     baseDM.forRootAsync({
-      imports: [ConfigModule],
+      imports: [SettingModule],
       useClass: DiscordConfigService,
     }),
     LoggerModule,

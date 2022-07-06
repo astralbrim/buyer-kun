@@ -9,6 +9,7 @@ import { PartEntity } from '../part/part.entity';
 import { ProductModule } from '../product/product.module';
 import { SchedulerManager } from './scheduler.manager';
 import { ScheduleModule } from '@nestjs/schedule';
+import {SettingModule} from "../setting/setting.module";
 
 @Module({
   exports: [SchedulerService],
@@ -21,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ProductModule,
     TypeOrmModule.forFeature([PartEntity]),
     ScheduleModule,
+    SettingModule,
   ],
 })
 export class SchedulerModule {}

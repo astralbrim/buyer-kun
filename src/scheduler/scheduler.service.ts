@@ -8,7 +8,7 @@ import { ProductService } from '../product/product.service';
 import { CRON_JOB } from './scheduler.constant';
 import { Channel } from '../discord/discord.constant';
 import { OnEvent } from '@nestjs/event-emitter';
-import {SettingService} from "../setting/setting.service";
+import { SettingService } from '../setting/setting.service';
 
 @Injectable()
 export class SchedulerService {
@@ -39,6 +39,7 @@ export class SchedulerService {
         part,
         true,
       );
+      if (!soldOutProducts) return;
       const currentProducts = await this.productService.getAll();
       // 重複がない配列にする。
       const nonDuplicateArray = ProductService.toNonDuplicateArray(
@@ -64,7 +65,7 @@ export class SchedulerService {
   @Cron(CronExpression.EVERY_30_MINUTES, { name: CRON_JOB.POST_GOOD_PRODUCT })
   async postGoodProduct() {
     this.loggerService.log('いい商品を見つけてきます');
-    const {priceRatio} = await this.settingService.getSetting();
+    const { priceRatio } = await this.settingService.getSetting();
     const newParts = await this.partService.getAll();
     for (const part of newParts) {
       // 販売中の商品の取得
@@ -72,6 +73,7 @@ export class SchedulerService {
         part,
         false,
       );
+      if (!onSaleProducts) return;
       const currentProducts = await this.productService.getAll();
       const nonDuplicateArray = ProductService.toNonDuplicateArray(
         currentProducts,
@@ -83,7 +85,7 @@ export class SchedulerService {
       }
       await this.productService.addProducts(filteredArray);
       for (const product of filteredArray) {
-        if (product.alreadyNotified) return;
+        if (product.alreadyNotified || !part.marketPrice) return;
         if (product.price < part.marketPrice * priceRatio) {
           await this.discordService.sendProductMessage(
             product,
@@ -103,6 +105,7 @@ export class SchedulerService {
     this.loggerService.log('相場をディスコードに報告します。');
     const parts = await this.partService.getAll();
     parts.forEach((part) => {
+      if (!part.marketPrice) return;
       this.discordService.sendMessage(
         `**${part.name}**の相場: ${Math.round(part.marketPrice)}円`,
         Channel.MARKET_PRICE,

@@ -13,7 +13,7 @@ export class PartService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async getByName(name: string): Promise<PartEntity> {
+  async getByName(name: string): Promise<PartEntity | null> {
     return await this.partRepository.findOneBy({ name });
   }
 
@@ -36,8 +36,9 @@ export class PartService {
   async updateMarketPrice(
     name: string,
     marketPrice: number,
-  ): Promise<PartEntity> {
+  ): Promise<PartEntity | null> {
     const part = await this.getByName(name);
+    if (!part?.marketPrice) return null;
     part.marketPrice = marketPrice;
     return await this.partRepository.save(part);
   }
@@ -46,8 +47,9 @@ export class PartService {
     name: string,
     minPrice: number,
     maxPrice: number,
-  ): Promise<PartEntity> {
+  ): Promise<PartEntity | null> {
     const part = await this.getByName(name);
+    if (!part) return null;
     part.name = name;
     part.minPrice = minPrice;
     part.maxPrice = maxPrice;

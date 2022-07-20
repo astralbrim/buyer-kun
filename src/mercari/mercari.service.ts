@@ -39,14 +39,16 @@ export class MercariService {
     const products: ProductEntity[] = [];
     for (const li of liArray) {
       const a = await li.$(selector.a);
-      const href = await a.evaluate((elm) => elm.getAttribute('href'));
+      const href = await a?.evaluate((elm) => elm.getAttribute('href'));
       const thumbnail = await li.$(selector['thumbnail']);
-      const displayName = (
-        await thumbnail.evaluate((elm) => elm.getAttribute('alt'))
-      ).slice(0, -6);
-      const price = await thumbnail.evaluate((elm) =>
+      const alt = await thumbnail?.evaluate((elm) => {
+        return elm.getAttribute('alt');
+      });
+      const displayName = alt?.slice(0, -6);
+      const price = await thumbnail?.evaluate((elm) =>
         elm.getAttribute('price'),
       );
+      if (!displayName || !href) return;
       products.push(
         ProductEntity.create(
           displayName,

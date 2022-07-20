@@ -17,7 +17,7 @@ export class Utils {
         )}_1.jpg`,
       )
       .setAuthor({
-        url: null,
+        url: '',
         name: 'メルカリ',
         iconURL:
           'https://gyazo.com/5b33c81e6bed70180bb126d1b6a8fc35/max_size/400',

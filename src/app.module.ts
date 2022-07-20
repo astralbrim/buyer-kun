@@ -14,9 +14,17 @@ import { LoggerModule } from './logger/logger.module';
 import { ConfigModule } from '@nestjs/config';
 import { DiscordConfigService } from './config/discord-config.service';
 import { SettingModule } from './setting/setting.module';
+import { RouterModule } from 'nest-router';
 
+const routes = [
+  {
+    path: '/api',
+    module: ApiModule,
+  },
+];
 @Module({
   imports: [
+    RouterModule.forRoutes(routes),
     ProductModule,
     ApiModule,
     TypeOrmModule.forRootAsync({

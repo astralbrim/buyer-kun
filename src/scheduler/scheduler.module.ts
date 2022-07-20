@@ -9,7 +9,7 @@ import { PartEntity } from '../part/part.entity';
 import { ProductModule } from '../product/product.module';
 import { SchedulerManager } from './scheduler.manager';
 import { ScheduleModule } from '@nestjs/schedule';
-import {SettingModule} from "../setting/setting.module";
+import { SettingModule } from '../setting/setting.module';
 
 @Module({
   exports: [SchedulerService],

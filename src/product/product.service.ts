@@ -40,7 +40,7 @@ export class ProductService {
     return await this.productRepository.findBy({ partName });
   }
 
-  async getById(id: number): Promise<ProductEntity> {
+  async getById(id: number): Promise<ProductEntity | null> {
     return await this.productRepository.findOneBy({ id });
   }
 

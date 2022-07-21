@@ -18,13 +18,13 @@ export class PartService {
   }
 
   async add(
-    name: string,
+    partsData: {name: string,
     minPrice: number,
     maxPrice: number,
-    type: ProductType,
-  ): Promise<PartEntity> {
-    const part = PartEntity.create(name, minPrice, maxPrice, type);
-    const result = await this.partRepository.save(part);
+    type: ProductType}[]
+  ): Promise<PartEntity[]> {
+    const parts = partsData.map(({name,minPrice, maxPrice, type}) => PartEntity.create(name, minPrice, maxPrice, type))
+    const result = await this.partRepository.save(parts);
     this.eventEmitter.emit('part.add');
     return result;
   }
@@ -38,7 +38,6 @@ export class PartService {
     marketPrice: number,
   ): Promise<PartEntity | null> {
     const part = await this.getByName(name);
-    if (!part?.marketPrice) return null;
     part.marketPrice = marketPrice;
     return await this.partRepository.save(part);
   }

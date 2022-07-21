@@ -17,9 +17,8 @@ export class PartController {
   constructor(private readonly partService: PartService) {}
 
   @Post('/')
-  async addPart(@Body() body: AddPartDto): Promise<ReturnPartDto> {
-    const { minPrice, maxPrice, name, type } = body;
-    return await this.partService.add(name, minPrice, maxPrice, type);
+  async addPart(@Body() body: AddPartDto[]): Promise<ReturnPartDto[]> {
+    return await this.partService.add(body);
   }
 
   @Delete('/:partName')

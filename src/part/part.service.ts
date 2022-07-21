@@ -21,7 +21,7 @@ export class PartService {
     name: string,
     minPrice: number,
     maxPrice: number,
-    type: ProductType
+    type: ProductType,
   ): Promise<PartEntity> {
     const part = PartEntity.create(name, minPrice, maxPrice, type);
     const result = await this.partRepository.save(part);
@@ -29,38 +29,35 @@ export class PartService {
     return result;
   }
 
-  async addAndUpdate(parts: {name: string,
-    type: ProductType,
-    minPrice: number,
-    maxPrice: number;}[]) {
+  async addAndUpdate(
+    parts: {
+      name: string;
+      type: ProductType;
+      minPrice: number;
+      maxPrice: number;
+    }[],
+  ) {
     const currentParts = await this.getAll();
     const newParts = parts.filter((part) => {
-      return currentParts.every((current) => current.name != part.name)
-    })
-    const deletedPart = currentParts.filter(
-      (current) => {
-        let isDeleted = true;
-        parts.forEach(
-          (part) => {
-            if(part.name == current.name) isDeleted = false
-          }
-        )
-        return isDeleted;
-      }
-    )
-    for (const {name, minPrice, maxPrice, type} of newParts) {
+      return currentParts.every((current) => current.name != part.name);
+    });
+    const deletedPart = currentParts.filter((current) => {
+      let isDeleted = true;
+      parts.forEach((part) => {
+        if (part.name == current.name) isDeleted = false;
+      });
+      return isDeleted;
+    });
+    for (const { name, minPrice, maxPrice, type } of newParts) {
       await this.add(name, minPrice, maxPrice, type);
     }
-    for (const {name} of deletedPart) {
+    for (const { name } of deletedPart) {
       await this.delete(name);
     }
-    parts.forEach(
-      ({name, minPrice, maxPrice, type}) => {
-        this.updateSetting(name, minPrice, maxPrice, type);
-      }
-    )
+    parts.forEach(({ name, minPrice, maxPrice, type }) => {
+      this.updateSetting(name, minPrice, maxPrice, type);
+    });
     return await this.getAll();
-
   }
 
   async getAll(): Promise<PartEntity[]> {
@@ -80,7 +77,7 @@ export class PartService {
     name: string,
     minPrice: number,
     maxPrice: number,
-    type: ProductType
+    type: ProductType,
   ): Promise<PartEntity | null> {
     const part = await this.getByName(name);
     if (!part) return null;

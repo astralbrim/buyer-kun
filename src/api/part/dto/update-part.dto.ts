@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {ProductType} from "../../../product/product.constant";
+import { ProductType } from '../../../product/product.constant';
 
 export class UpdatePartDto {
   @ApiProperty()

@@ -6,7 +6,6 @@ export class AddPartDto {
   name: string;
   @ApiProperty()
   type: ProductType;
-  x;
   @ApiProperty()
   minPrice: number;
   @ApiProperty()

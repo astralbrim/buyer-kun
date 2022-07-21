@@ -18,7 +18,7 @@ export class PartController {
 
   @Post('/')
   async addPart(@Body() body: AddPartDto[]): Promise<ReturnPartDto[]> {
-    return await this.partService.add(body);
+    return await this.partService.addAndUpdate(body);
   }
 
   @Delete('/:partName')
@@ -28,8 +28,8 @@ export class PartController {
 
   @Patch('/')
   async updatePart(@Body() body: UpdatePartDto): Promise<ReturnPartDto> {
-    const { name, minPrice, maxPrice } = body;
-    return await this.partService.updateSetting(name, minPrice, maxPrice);
+    const { name, minPrice, maxPrice, type } = body;
+    return await this.partService.updateSetting(name, minPrice, maxPrice, type);
   }
 
   @Get('/')

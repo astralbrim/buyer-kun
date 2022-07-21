@@ -12,7 +12,7 @@ export class DiscordService {
   ) {}
 
   async getTargetChannel(id: string) {
-    return this.client.channels.cache.get(id);
+    return await this.client.channels.fetch(id);
   }
 
   async sendMessage(text: string, channelId: string) {

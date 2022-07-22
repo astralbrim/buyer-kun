@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { PartEntity } from '../part/part.entity';
 
 @Entity('product')
 export class ProductEntity {
@@ -20,8 +27,12 @@ export class ProductEntity {
   @Column()
   uploadedAt: Date;
 
-  @Column()
-  partName: string;
+  @ManyToOne(() => PartEntity, (partEntity) => partEntity)
+  @JoinColumn({
+    name: 'part_id',
+    referencedColumnName: 'id',
+  })
+  part: PartEntity;
 
   @Column()
   alreadyNotified: boolean;
@@ -31,7 +42,7 @@ export class ProductEntity {
     link: string,
     uploadedAt: Date,
     price: number,
-    partName: string,
+    part: PartEntity,
     soldOut: boolean,
   ) {
     const newInstance = new ProductEntity();
@@ -39,7 +50,7 @@ export class ProductEntity {
     newInstance.link = link;
     newInstance.uploadedAt = uploadedAt;
     newInstance.price = price;
-    newInstance.partName = partName;
+    newInstance.part = part;
     newInstance.soldOut = soldOut;
     newInstance.alreadyNotified = false;
 

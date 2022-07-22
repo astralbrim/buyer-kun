@@ -1,5 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ProductType } from '../product/product.constant';
+import { ProductEntity } from '../product/product.entity';
 
 @Entity('part')
 export class PartEntity {
@@ -20,6 +26,12 @@ export class PartEntity {
 
   @Column({ nullable: true })
   marketPrice?: number;
+
+  @OneToMany(() => ProductEntity, (productEntity) => productEntity.part, {
+    createForeignKeyConstraints: false,
+    persistence: false,
+  })
+  products?: ProductEntity[];
 
   public static create(
     name: string,

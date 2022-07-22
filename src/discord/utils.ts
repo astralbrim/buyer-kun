@@ -7,7 +7,7 @@ export class Utils {
     return new MessageEmbed()
       .setTitle(product.displayName)
       .setURL(baseURL + product.link)
-      .addField('パーツ名', product.partName)
+      .addField('パーツ名', product.part.name)
       .addField('値段', product.price.toString())
       .setColor('RANDOM')
       .setTimestamp()

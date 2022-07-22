@@ -41,6 +41,7 @@ export class SchedulerService {
       );
       if (!soldOutProducts) return;
       const currentProducts = await this.productService.getAll();
+
       // 重複がない配列にする。
       const nonDuplicateArray = ProductService.toNonDuplicateArray(
         currentProducts,

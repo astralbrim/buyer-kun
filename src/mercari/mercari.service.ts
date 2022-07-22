@@ -55,7 +55,7 @@ export class MercariService {
           href,
           new Date(),
           Number(price),
-          part.name,
+          part,
           soldOut,
         ),
       );

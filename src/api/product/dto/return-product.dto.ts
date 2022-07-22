@@ -1,5 +1,6 @@
 import { ProductEntity } from '../../../product/product.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { PartEntity } from '../../../part/part.entity';
 
 export class ReturnProductDto extends ProductEntity {
   @ApiProperty()
@@ -12,9 +13,6 @@ export class ReturnProductDto extends ProductEntity {
   declare link: string;
 
   @ApiProperty()
-  declare partName: string;
-
-  @ApiProperty()
   declare soldOut: boolean;
 
   @ApiProperty()
@@ -25,4 +23,7 @@ export class ReturnProductDto extends ProductEntity {
 
   @ApiProperty()
   declare displayName: string;
+
+  @ApiProperty()
+  declare part: PartEntity;
 }

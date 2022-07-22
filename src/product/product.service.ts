@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
+import { PartEntity } from '../part/part.entity';
+import { PartService } from '../part/part.service';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(ProductEntity)
     private readonly productRepository: Repository<ProductEntity>,
+    private readonly partService: PartService,
   ) {}
 
   async addProduct(
@@ -15,7 +18,7 @@ export class ProductService {
     displayName: string,
     uploadedAt: Date,
     price: number,
-    partName: string,
+    part: PartEntity,
     soldOut: boolean,
   ): Promise<ProductEntity> {
     const product = ProductEntity.create(
@@ -23,7 +26,7 @@ export class ProductService {
       link,
       uploadedAt,
       price,
-      partName,
+      part,
       soldOut,
     );
     return await this.productRepository.save(product);
@@ -37,7 +40,8 @@ export class ProductService {
   }
 
   async getByPartName(partName: string): Promise<ProductEntity[]> {
-    return await this.productRepository.findBy({ partName });
+    const part = await this.partService.getByName(partName);
+    return await this.productRepository.findBy({ part });
   }
 
   async getById(id: number): Promise<ProductEntity | null> {
@@ -76,7 +80,7 @@ export class ProductService {
   public static isCorrectProduct(product: ProductEntity) {
     const hankakuPartName = this.zenkakuToHankaku(product.displayName);
     const notIncludeSpace = this.toNotIncludeSpace(hankakuPartName);
-    const reg = new RegExp(product.partName, 'i');
+    const reg = new RegExp(product.part.name, 'i');
     return !!notIncludeSpace.match(reg);
   }
 

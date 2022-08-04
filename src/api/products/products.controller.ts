@@ -1,11 +1,11 @@
 import { Controller, Get, Logger, Param } from '@nestjs/common';
-import { ProductService } from '../../product/product.service';
+import { ProductsService } from '../../products/products.service';
 import { ReturnProductDto } from './dto/return-product.dto';
 
-@Controller('product')
-export class ProductController {
+@Controller('products')
+export class ProductsController {
   private readonly loggerService = new Logger();
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductsService) {}
   @Get('/')
   async getAllProducts(): Promise<ReturnProductDto[]> {
     this.loggerService.verbose('Get All Product');

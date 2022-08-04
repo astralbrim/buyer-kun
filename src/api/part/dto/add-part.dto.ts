@@ -1,13 +1,17 @@
-import { ProductType } from '../../../product/product.constant';
 import { ApiProperty } from '@nestjs/swagger';
+import { PartTypesEntity } from '../../../part-types/part-types.entity';
 
 export class AddPartDto {
   @ApiProperty()
   name: string;
   @ApiProperty()
-  type: ProductType;
+  partType: string;
   @ApiProperty()
-  minPrice: number;
+  isResearchTarget: boolean;
   @ApiProperty()
-  maxPrice: number;
+  minPrice?: number;
+  @ApiProperty()
+  maxPrice?: number;
+  @ApiProperty()
+  partTypes: PartTypesEntity;
 }

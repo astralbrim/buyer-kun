@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductEntity } from './product.entity';
-import { PartEntity } from '../part/part.entity';
-import { PartService } from '../part/part.service';
+import { ProductsEntity } from './products.entity';
+import { PartsEntity } from '../parts/parts.entity';
+import { PartsService } from '../parts/parts.service';
 
 @Injectable()
-export class ProductService {
+export class ProductsService {
   constructor(
-    @InjectRepository(ProductEntity)
-    private readonly productRepository: Repository<ProductEntity>,
-    private readonly partService: PartService,
+    @InjectRepository(ProductsEntity)
+    private readonly productRepository: Repository<ProductsEntity>,
+    private readonly partService: PartsService,
   ) {}
 
   async addProduct(
@@ -18,10 +18,10 @@ export class ProductService {
     displayName: string,
     uploadedAt: Date,
     price: number,
-    part: PartEntity,
+    part: PartsEntity,
     soldOut: boolean,
-  ): Promise<ProductEntity> {
-    const product = ProductEntity.create(
+  ): Promise<ProductsEntity> {
+    const product = ProductsEntity.create(
       displayName,
       link,
       uploadedAt,
@@ -31,20 +31,20 @@ export class ProductService {
     );
     return await this.productRepository.save(product);
   }
-  async addProducts(products: ProductEntity[]): Promise<ProductEntity[]> {
+  async addProducts(products: ProductsEntity[]): Promise<ProductsEntity[]> {
     return await this.productRepository.save(products);
   }
 
-  async getAll(): Promise<ProductEntity[]> {
+  async getAll(): Promise<ProductsEntity[]> {
     return await this.productRepository.find();
   }
 
-  async getByPartName(partName: string): Promise<ProductEntity[]> {
+  async getByPartName(partName: string): Promise<ProductsEntity[]> {
     const part = await this.partService.getByName(partName);
     return await this.productRepository.findBy({ part });
   }
 
-  async getById(id: number): Promise<ProductEntity | null> {
+  async getById(id: number): Promise<ProductsEntity | null> {
     return await this.productRepository.findOneBy({ id });
   }
 
@@ -52,14 +52,16 @@ export class ProductService {
     return await this.productRepository.delete(id);
   }
 
-  async updateAlreadyNotified(product: ProductEntity): Promise<ProductEntity> {
-    product.alreadyNotified = true;
+  async updateAlreadyNotified(
+    product: ProductsEntity,
+  ): Promise<ProductsEntity> {
+    product.isAlreadyNotified = true;
     return await this.productRepository.save(product);
   }
 
   public static toNonDuplicateArray(
-    baseProducts: ProductEntity[],
-    newProducts: ProductEntity[],
+    baseProducts: ProductsEntity[],
+    newProducts: ProductsEntity[],
   ) {
     return newProducts.filter((newProduct) => {
       for (const baseProduct of baseProducts) {
@@ -71,13 +73,13 @@ export class ProductService {
     });
   }
 
-  public static filterProducts(products: ProductEntity[]) {
+  public static filterProducts(products: ProductsEntity[]) {
     return products.filter((product) => {
       return this.isCorrectProduct(product);
     });
   }
 
-  public static isCorrectProduct(product: ProductEntity) {
+  public static isCorrectProduct(product: ProductsEntity) {
     const hankakuPartName = this.zenkakuToHankaku(product.displayName);
     const notIncludeSpace = this.toNotIncludeSpace(hankakuPartName);
     const reg = new RegExp(product.part.name, 'i');

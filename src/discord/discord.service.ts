@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDiscordClient } from '@discord-nestjs/core';
 import { Client, MessageEmbed, TextChannel } from 'discord.js';
 import { Utils } from './utils';
-import { ProductEntity } from '../product/product.entity';
+import { ProductsEntity } from '../products/products.entity';
 
 @Injectable()
 export class DiscordService {
@@ -27,7 +27,7 @@ export class DiscordService {
     await channel.send({ embeds: [embed] });
   }
 
-  async sendProductMessage(product: ProductEntity, channelId: string) {
+  async sendProductMessage(product: ProductsEntity, channelId: string) {
     await this.sendEmbedMessage(Utils.createEmbedMessage(product), channelId);
   }
 }

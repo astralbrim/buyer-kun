@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import { baseURL, selector } from './mercari.constant';
 import { Utils } from './utils';
-import { ProductEntity } from '../product/product.entity';
-import { PartEntity } from '../part/part.entity';
+import { ProductsEntity } from '../products/products.entity';
+import { PartsEntity } from '../parts/parts.entity';
 
 @Injectable()
 export class MercariService {
@@ -28,7 +28,7 @@ export class MercariService {
    * @param part
    * @param soldOut
    **/
-  public async getProductInfos(part: PartEntity, soldOut: boolean) {
+  public async getProductInfos(part: PartsEntity, soldOut: boolean) {
     const page = await this.init(
       Utils.createParams(part.maxPrice, part.minPrice, part.name, soldOut),
     );
@@ -36,7 +36,7 @@ export class MercariService {
     const ul = await page.$(selector.ul);
     if (!ul) throw Error();
     const liArray = await ul.$$(selector.li);
-    const products: ProductEntity[] = [];
+    const products: ProductsEntity[] = [];
     for (const li of liArray) {
       const a = await li.$(selector.a);
       const href = await a?.evaluate((elm) => elm.getAttribute('href'));
@@ -50,7 +50,7 @@ export class MercariService {
       );
       if (!displayName || !href) return;
       products.push(
-        ProductEntity.create(
+        ProductsEntity.create(
           displayName,
           href,
           new Date(),

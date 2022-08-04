@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ProductType } from '../../../product/product.constant';
 
 export class UpdatePartDto {
   @ApiProperty()
@@ -9,5 +8,7 @@ export class UpdatePartDto {
   @ApiProperty()
   maxPrice: number;
   @ApiProperty()
-  type: ProductType;
+  isResearchTarget: boolean;
+  @ApiProperty()
+  partTypeName: string;
 }

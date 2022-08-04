@@ -1,28 +1,43 @@
 import { Module } from '@nestjs/common';
-import { ProductModule } from '../product/product.module';
-import { ProductService } from '../product/product.service';
+import { ProductsModule } from '../products/products.module';
+import { ProductsService } from '../products/products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProductEntity } from '../product/product.entity';
+import { ProductsEntity } from '../products/products.entity';
 import { MercariModule } from '../mercari/mercari.module';
-import { PartModule } from '../part/part.module';
-import { PartEntity } from '../part/part.entity';
+import { PartsModule } from '../parts/parts.module';
+import { PartsEntity } from '../parts/parts.entity';
 import { SchedulerModule } from '../scheduler/scheduler.module';
 import { PartController } from './part/part.controller';
-import { ProductController } from './product/product.controller';
+import { ProductsController } from './products/products.controller';
 import { SettingController } from './setting/setting.controller';
 import { SettingEntity } from '../setting/setting.entity';
 import { SettingModule } from '../setting/setting.module';
+import { PartTypesController } from './part-types/part-types.controller';
+import { PartTypesModule } from '../part-types/part-types.module';
+import { PartTypesEntity } from '../part-types/part-types.entity';
+import { PartTypesService } from '../part-types/part-types.service';
 
 @Module({
   imports: [
-    ProductModule,
-    TypeOrmModule.forFeature([ProductEntity, PartEntity, SettingEntity]),
+    ProductsModule,
+    TypeOrmModule.forFeature([
+      ProductsEntity,
+      PartsEntity,
+      SettingEntity,
+      PartTypesEntity,
+    ]),
     MercariModule,
-    PartModule,
+    PartsModule,
     SchedulerModule,
     SettingModule,
+    PartTypesModule,
   ],
-  providers: [ProductService],
-  controllers: [PartController, ProductController, SettingController],
+  providers: [ProductsService, PartTypesService],
+  controllers: [
+    PartController,
+    ProductsController,
+    SettingController,
+    PartTypesController,
+  ],
 })
 export class ApiModule {}

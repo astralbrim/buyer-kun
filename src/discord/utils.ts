@@ -1,9 +1,9 @@
-import { ProductEntity } from '../product/product.entity';
+import { ProductsEntity } from '../products/products.entity';
 import { baseURL } from '../mercari/mercari.constant';
 import { MessageEmbed } from 'discord.js';
 
 export class Utils {
-  public static createEmbedMessage(product: ProductEntity): MessageEmbed {
+  public static createEmbedMessage(product: ProductsEntity): MessageEmbed {
     return new MessageEmbed()
       .setTitle(product.displayName)
       .setURL(baseURL + product.link)

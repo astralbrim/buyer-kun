@@ -1,18 +1,23 @@
-import { PartEntity } from '../../../part/part.entity';
-import { ProductType } from '../../../product/product.constant';
 import { ApiProperty } from '@nestjs/swagger';
+import { PartTypesEntity } from '../../../part-types/part-types.entity';
 
-export class ReturnPartDto extends PartEntity {
+export class ReturnPartDto {
   @ApiProperty()
-  declare name: string;
+  name: string;
   @ApiProperty()
-  declare maxPrice: number;
+  maxPrice?: number;
   @ApiProperty()
-  declare minPrice: number;
+  minPrice?: number;
   @ApiProperty()
-  declare marketPrice?: number;
+  marketPrice?: number;
   @ApiProperty()
-  declare type: ProductType;
+  partTypes: PartTypesEntity;
   @ApiProperty()
-  declare id: number;
+  id: number;
+  @ApiProperty()
+  createdAt: Date;
+  @ApiProperty()
+  isResearchTarget: boolean;
+  @ApiProperty()
+  updatedAt: Date;
 }

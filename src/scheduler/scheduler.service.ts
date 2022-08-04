@@ -2,9 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DiscordService } from '../discord/discord.service';
 import { MercariService } from '../mercari/mercari.service';
-import { PartService } from '../part/part.service';
+import { PartsService } from '../parts/parts.service';
 import { Utils as MUtils } from '../mercari/utils';
-import { ProductService } from '../product/product.service';
+import { ProductsService } from '../products/products.service';
 import { CRON_JOB } from './scheduler.constant';
 import { Channel } from '../discord/discord.constant';
 import { OnEvent } from '@nestjs/event-emitter';
@@ -18,8 +18,8 @@ export class SchedulerService {
   constructor(
     private readonly discordService: DiscordService,
     private readonly mercariService: MercariService,
-    private readonly partService: PartService,
-    private readonly productService: ProductService,
+    private readonly partService: PartsService,
+    private readonly productService: ProductsService,
     private readonly settingService: SettingService,
   ) {
     this.time = 0;
@@ -35,6 +35,7 @@ export class SchedulerService {
     // 全てのパーツ
     const parts = await this.partService.getAll();
     for (const part of parts) {
+      if (!part.isResearchTarget) return;
       const soldOutProducts = await this.mercariService.getProductInfos(
         part,
         true,
@@ -43,12 +44,12 @@ export class SchedulerService {
       const currentProducts = await this.productService.getAll();
 
       // 重複がない配列にする。
-      const nonDuplicateArray = ProductService.toNonDuplicateArray(
+      const nonDuplicateArray = ProductsService.toNonDuplicateArray(
         currentProducts,
         soldOutProducts,
       );
       // 関係のない商品の削除
-      const filteredArray = ProductService.filterProducts(nonDuplicateArray);
+      const filteredArray = ProductsService.filterProducts(nonDuplicateArray);
       if (filteredArray.length === 0) {
         continue;
       }
@@ -69,6 +70,7 @@ export class SchedulerService {
     const { priceRatio } = await this.settingService.getSetting();
     const newParts = await this.partService.getAll();
     for (const part of newParts) {
+      if (!part.isResearchTarget) return;
       // 販売中の商品の取得
       const onSaleProducts = await this.mercariService.getProductInfos(
         part,
@@ -76,17 +78,17 @@ export class SchedulerService {
       );
       if (!onSaleProducts) return;
       const currentProducts = await this.productService.getAll();
-      const nonDuplicateArray = ProductService.toNonDuplicateArray(
+      const nonDuplicateArray = ProductsService.toNonDuplicateArray(
         currentProducts,
         onSaleProducts,
       );
-      const filteredArray = ProductService.filterProducts(nonDuplicateArray);
+      const filteredArray = ProductsService.filterProducts(nonDuplicateArray);
       if (filteredArray.length === 0) {
         continue;
       }
       await this.productService.addProducts(filteredArray);
       for (const product of filteredArray) {
-        if (product.alreadyNotified || !part.marketPrice) return;
+        if (product.isAlreadyNotified || !part.marketPrice) return;
         if (product.price < part.marketPrice * priceRatio) {
           await this.discordService.sendProductMessage(
             product,
@@ -106,7 +108,7 @@ export class SchedulerService {
     this.loggerService.log('相場をディスコードに報告します。');
     const parts = await this.partService.getAll();
     parts.forEach((part) => {
-      if (!part.marketPrice) return;
+      if (!part.isResearchTarget) return;
       this.discordService.sendMessage(
         `**${part.name}**の相場: ${Math.round(part.marketPrice)}円`,
         Channel.MARKET_PRICE,

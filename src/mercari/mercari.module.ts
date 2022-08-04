@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MercariService } from './mercari.service';
-import { ProductModule } from '../product/product.module';
+import { ProductsModule } from '../products/products.module';
 
 @Module({
-  imports: [ProductModule],
+  imports: [ProductsModule],
   providers: [MercariService],
   exports: [MercariService],
 })

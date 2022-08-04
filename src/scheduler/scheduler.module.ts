@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { SchedulerService } from './scheduler.service';
 import { DiscordModule } from '../discord/discord.module';
 import { DiscordModule as DM } from '@discord-nestjs/core';
-import { PartModule } from '../part/part.module';
+import { PartsModule } from '../parts/parts.module';
 import { MercariModule } from '../mercari/mercari.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PartEntity } from '../part/part.entity';
-import { ProductModule } from '../product/product.module';
+import { PartsEntity } from '../parts/parts.entity';
+import { ProductsModule } from '../products/products.module';
 import { SchedulerManager } from './scheduler.manager';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SettingModule } from '../setting/setting.module';
@@ -18,9 +18,9 @@ import { SettingModule } from '../setting/setting.module';
     DiscordModule,
     DM.forFeature(),
     MercariModule,
-    PartModule,
-    ProductModule,
-    TypeOrmModule.forFeature([PartEntity]),
+    PartsModule,
+    ProductsModule,
+    TypeOrmModule.forFeature([PartsEntity]),
     ScheduleModule,
     SettingModule,
   ],

@@ -1,4 +1,4 @@
-import { ProductEntity } from '../product/product.entity';
+import { ProductsEntity } from '../products/products.entity';
 
 export class Utils {
   public static createParams(
@@ -12,7 +12,7 @@ export class Utils {
     }`;
   }
 
-  public static calcMarketPrice(products: ProductEntity[]): number {
+  public static calcMarketPrice(products: ProductsEntity[]): number {
     let sum = 0;
     products.forEach((product) => {
       sum += product.price;

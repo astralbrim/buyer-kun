@@ -7,33 +7,42 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { PartService } from '../../part/part.service';
+import { PartsService } from '../../parts/parts.service';
 import { UpdatePartDto } from './dto/update-part.dto';
 import { AddPartDto } from './dto/add-part.dto';
 import { ReturnPartDto } from './dto/return-part.dto';
 
 @Controller('part')
 export class PartController {
-  constructor(private readonly partService: PartService) {}
+  constructor(private readonly partService: PartsService) {}
 
-  @Post('/')
-  async addPart(@Body() body: AddPartDto[]): Promise<ReturnPartDto[]> {
+  @Post('/list')
+  async addParts(@Body() body: AddPartDto[]): Promise<ReturnPartDto[]> {
     return await this.partService.addAndUpdate(body);
   }
 
-  @Delete('/:partName')
-  async deletePart(@Param('partName') partName: string): Promise<boolean> {
-    return await this.partService.delete(partName);
+  @Delete('/:name')
+  async deletePart(@Param('name') name: string): Promise<boolean> {
+    return await this.partService.delete(name);
   }
 
-  @Patch('/')
-  async updatePart(@Body() body: UpdatePartDto): Promise<ReturnPartDto> {
-    const { name, minPrice, maxPrice, type } = body;
-    return await this.partService.updateSetting(name, minPrice, maxPrice, type);
+  @Patch('/:name')
+  async updatePart(
+    @Param('name') name: string,
+    @Body() body: Omit<UpdatePartDto, 'name'>,
+  ): Promise<ReturnPartDto> {
+    const { minPrice, maxPrice, isResearchTarget, partTypeName } = body;
+    return await this.partService.updateSetting(
+      name,
+      minPrice,
+      maxPrice,
+      isResearchTarget,
+      partTypeName,
+    );
   }
 
   @Get('/')
-  async getAllPart(): Promise<ReturnPartDto[]> {
+  async getAllParts(): Promise<ReturnPartDto[]> {
     return await this.partService.getAll();
   }
 }

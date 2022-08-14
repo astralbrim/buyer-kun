@@ -12,7 +12,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "npx @nestjs/cli start",
     "start:dev": "nest start --watch",
     "start:repl": "nest start --watch --entryFile debug",
     "start:debug": "nest start --debug --watch",

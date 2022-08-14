@@ -1,6 +1,6 @@
 import { ProductsEntity } from '../products/products.entity';
 import { baseURL } from '../mercari/mercari.constant';
-import { MessageEmbed } from 'discord.js';
+import {AnyChannel, MessageEmbed, TextChannel} from 'discord.js';
 
 export class Utils {
   public static createEmbedMessage(product: ProductsEntity): MessageEmbed {
@@ -22,5 +22,9 @@ export class Utils {
         iconURL:
           'https://gyazo.com/5b33c81e6bed70180bb126d1b6a8fc35/max_size/400',
       });
+  }
+
+  public static isTextChannel(channel: AnyChannel): channel is TextChannel {
+    return channel instanceof TextChannel;
   }
 }

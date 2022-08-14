@@ -10,10 +10,16 @@ import { PartsEntity } from '../parts/parts.entity';
 
 @Entity()
 export class PartTypesEntity {
+  /**
+   * id
+   */
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar', { comment: 'パーツの種類名' })
+  /**
+   * パーツの種類名
+   */
+  @Column('varchar')
   name: string;
 
   @OneToMany(() => PartsEntity, (parts) => parts.partTypes, {

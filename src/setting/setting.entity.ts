@@ -39,14 +39,20 @@ export class SettingEntity {
   @Column({ nullable: false })
   discordToken: string;
 
-  public static create(): SettingEntity {
+  public static create(
+    priceRatio: number,
+    discordToken: string,
+    searchMarketPriceTimeInterval: CronExpression,
+    postDiscordTimeInterval: CronExpression,
+    postGoodProductInterval: CronExpression
+  ): SettingEntity {
     const setting = new SettingEntity();
     setting.ensure = 1;
-    setting.searchMarketPriceTimeInterval = CronExpression.EVERY_YEAR;
-    setting.postDiscordTimeInterval = CronExpression.EVERY_YEAR;
-    setting.priceRatio = 1.0;
-    setting.discordToken = '';
-    setting.postGoodProductInterval = CronExpression.EVERY_YEAR;
+    setting.searchMarketPriceTimeInterval = searchMarketPriceTimeInterval;
+    setting.postDiscordTimeInterval = postDiscordTimeInterval;
+    setting.priceRatio = priceRatio;
+    setting.discordToken = discordToken;
+    setting.postGoodProductInterval = postGoodProductInterval;
     return setting;
   }
 }

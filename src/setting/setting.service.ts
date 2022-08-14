@@ -15,52 +15,50 @@ export class SettingService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
   async getSetting(): Promise<SettingEntity> {
-    return (
-      (await this.settingRepository.find()).at(0) ?? SettingEntity.create()
-    );
+    return (await this.settingRepository.find()).at(0);
   }
 
-  async setPriceRatio(ratio: number): Promise<void> {
+  async setPriceRatio(ratio: number): Promise<number> {
     const setting = await this.getSetting();
     setting.priceRatio = ratio;
-    await this.settingRepository.save(setting);
+    return (await this.settingRepository.save(setting)).priceRatio;
   }
 
   async setSearchMarketPriceTimeInterval(
     interval: CronExpression,
-  ): Promise<void> {
+  ): Promise<string> {
     const setting = await this.getSetting();
     setting.searchMarketPriceTimeInterval = interval;
     this.eventEmitter.emit(
       events.searchMarketPriceTimeInterval,
       new UpdateSettingEvent(interval),
     );
-    await this.settingRepository.save(setting);
+    return (await this.settingRepository.save(setting)).searchMarketPriceTimeInterval;
   }
 
-  async setPostDiscordTimeInterval(interval: CronExpression): Promise<void> {
+  async setPostDiscordTimeInterval(interval: CronExpression): Promise<string> {
     const setting = await this.getSetting();
     setting.postDiscordTimeInterval = interval;
     this.eventEmitter.emit(
       events.postDiscordTimeInterval,
       new UpdateSettingEvent(interval),
     );
-    await this.settingRepository.save(setting);
+    return (await this.settingRepository.save(setting)).postDiscordTimeInterval;
   }
 
-  async setDiscordToken(token: string): Promise<void> {
+  async setDiscordToken(token: string): Promise<string> {
     const setting = await this.getSetting();
     setting.discordToken = token;
-    await this.settingRepository.save(setting);
+    return (await this.settingRepository.save(setting)).discordToken;
   }
 
-  async setPostGoodProductInterval(interval: CronExpression): Promise<void> {
+  async setPostGoodProductInterval(interval: CronExpression): Promise<string> {
     const setting = await this.getSetting();
     setting.postGoodProductInterval = interval;
     this.eventEmitter.emit(
       events.postGoodProductInterval,
       new UpdateSettingEvent(interval),
     );
-    await this.settingRepository.save(setting);
+    return (await this.settingRepository.save(setting)).postGoodProductInterval;
   }
 }

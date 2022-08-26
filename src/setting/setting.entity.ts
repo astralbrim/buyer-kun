@@ -33,12 +33,6 @@ export class SettingEntity {
   @Column({ nullable: false })
   postDiscordTimeInterval: CronExpression;
 
-  /**
-   * ディスコードのトークン
-   */
-  @Column({ nullable: false })
-  discordToken: string;
-
   public static create(
     priceRatio: number,
     discordToken: string,
@@ -51,7 +45,6 @@ export class SettingEntity {
     setting.searchMarketPriceTimeInterval = searchMarketPriceTimeInterval;
     setting.postDiscordTimeInterval = postDiscordTimeInterval;
     setting.priceRatio = priceRatio;
-    setting.discordToken = discordToken;
     setting.postGoodProductInterval = postGoodProductInterval;
     return setting;
   }

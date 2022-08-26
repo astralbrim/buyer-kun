@@ -40,7 +40,7 @@ const routes = [
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     baseDM.forRootAsync({
-      imports: [SettingModule],
+      imports: [ConfigModule],
       useClass: DiscordConfigService,
     }),
     LoggerModule,

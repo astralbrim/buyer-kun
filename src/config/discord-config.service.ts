@@ -3,14 +3,14 @@ import {
   DiscordModuleOption,
   DiscordOptionsFactory,
 } from '@discord-nestjs/core';
-import { SettingService } from '../setting/setting.service';
+import {ConfigService} from "@nestjs/config";
 
 @Injectable()
 export class DiscordConfigService implements DiscordOptionsFactory {
-  constructor(private settingService: SettingService) {}
+  constructor(private configService: ConfigService) {}
   async createDiscordOptions(): Promise<DiscordModuleOption> {
     return {
-      token: (await this.settingService.getSetting()).discordToken,
+      token: this.configService.get<string>("DISCORD_TOKEN"),
       discordClientOptions: {
         intents: ['GUILD_MESSAGES'],
       },

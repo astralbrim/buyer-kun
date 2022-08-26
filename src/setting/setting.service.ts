@@ -46,12 +46,6 @@ export class SettingService {
     return (await this.settingRepository.save(setting)).postDiscordTimeInterval;
   }
 
-  async setDiscordToken(token: string): Promise<string> {
-    const setting = await this.getSetting();
-    setting.discordToken = token;
-    return (await this.settingRepository.save(setting)).discordToken;
-  }
-
   async setPostGoodProductInterval(interval: CronExpression): Promise<string> {
     const setting = await this.getSetting();
     setting.postGoodProductInterval = interval;

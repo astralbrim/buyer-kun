@@ -15,7 +15,6 @@ export class SettingController {
       postDiscordTimeInterval,
       searchMarketPriceTimeInterval,
       priceRatio,
-      discordToken,
       postGoodProductInterval,
     } = body;
     if (postDiscordTimeInterval)
@@ -27,7 +26,6 @@ export class SettingController {
         searchMarketPriceTimeInterval,
       );
     if (priceRatio) await this.settingService.setPriceRatio(priceRatio);
-    if (discordToken) await this.settingService.setDiscordToken(discordToken);
     if (postGoodProductInterval)
       await this.settingService.setPostGoodProductInterval(
         postGoodProductInterval,
